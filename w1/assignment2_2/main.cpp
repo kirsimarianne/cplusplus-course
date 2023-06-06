@@ -1,6 +1,6 @@
 #include <string>
 #include <iostream>
-
+#include <cctype>
 
 
 bool length_valid(const std::string &str)
@@ -14,16 +14,31 @@ bool length_valid(const std::string &str)
     }
 }
 
-/*bool contains_uppercase()
+bool contains_uppercase(const std::string &str)
 {
-
+    for(int i = 0; i < str.length(); i++)
+    {
+        if(std::isupper(str[i]))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
-bool contains_lowercase()
+bool contains_lowercase(const std::string &str)
 {
-
+    for(int i = 0; i < str.length(); i++)
+    {
+        if(std::islower(str[i]))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
+/*
 bool contains_digit()
 {
 
@@ -47,9 +62,12 @@ int main()
 {
     std::string password {set_password()};
 
-    if(length_valid(password))
+    if(length_valid(password) && contains_uppercase(password) && contains_lowercase(password))
     {
         std::cout << "Password is strong." << std::endl;
+    }
+    else{
+        std::cout << "Password is weak." << std::endl;
     }
     
     return 0;
