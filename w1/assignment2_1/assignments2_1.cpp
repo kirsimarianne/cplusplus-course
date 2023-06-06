@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
 
-std::string reverseString(std::string str)
+std::string reverse_string(std::string str)
 {
     for(int i = 0; i < str.length()/2; i++){
         std::swap(str[i], str[str.length()-i-1]);
@@ -9,12 +9,18 @@ std::string reverseString(std::string str)
     return str;
 }
 
-int main()
+std::string get_string_from_user()
 {
     std::cout << "Enter a string: " << std::endl;
     std::string userinput;
     std:: cin >> userinput;
-    std::cout << "Reverse string: "<< reverseString(userinput) << std::endl;
+    return userinput;
+
+}
+
+int main()
+{
+    std::cout << "Reverse string: "<< reverse_string(get_string_from_user()) << std::endl;
     return 0;
 
 }
