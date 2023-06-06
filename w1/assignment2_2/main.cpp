@@ -78,8 +78,6 @@ int main()
 {
     std::string password {set_password()};
 
-    contains_punct(password);
-
     if(length_valid(password) && contains_uppercase(password) && contains_lowercase(password)
         && contains_digit(password) && contains_punct(password))
     {
