@@ -38,16 +38,32 @@ bool contains_lowercase(const std::string &str)
     return false;
 }
 
-/*
-bool contains_digit()
-{
 
+bool contains_digit(const std::string &str)
+{
+    for(int i = 0; i < str.length(); i++)
+    {
+        if(std::isdigit(str[i]))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
-bool contains_special()
+bool contains_punct(const std::string &str)
 {
+    for(int i = 0; i < str.length(); i++)
+    {
+        if(std::ispunct(str[i]))
+        {
+            return true;
+            
+        }
+    }
+    return false;
+}
 
-}*/
 
 std::string set_password()
 {
@@ -62,7 +78,10 @@ int main()
 {
     std::string password {set_password()};
 
-    if(length_valid(password) && contains_uppercase(password) && contains_lowercase(password))
+    contains_punct(password);
+
+    if(length_valid(password) && contains_uppercase(password) && contains_lowercase(password)
+        && contains_digit(password) && contains_punct(password))
     {
         std::cout << "Password is strong." << std::endl;
     }
