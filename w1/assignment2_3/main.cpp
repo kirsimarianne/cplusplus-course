@@ -1,19 +1,16 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cmath>
 
 struct StudentStruct
-    {
-        std::string name {};
-        int age {};
-        int grade {};
-    };
+{
+    std::string name {};
+    int age {};
+    int grade {};
+};
 
-
-
-//set students from user
-
-void get_students_from_user(std::vector<StudentStruct> &students_vect)
+void set_students(std::vector<StudentStruct> &students_vect)
 {
     StudentStruct student;
     std::cout << "Count of students: " << std::endl;
@@ -28,20 +25,39 @@ void get_students_from_user(std::vector<StudentStruct> &students_vect)
         std::cin >> student.grade;
         students_vect.push_back(student);
     }
-    
-
 }
 
-//get average grade
+void print_average(std::vector<StudentStruct> &students_vect)
+{
+    double sum {0};
+    for(StudentStruct student : students_vect)
+    {
+        sum = sum + student.grade;
+    }
+    double average {sum/students_vect.size()};
+    std::cout << "Average is: " << round(average*100.0)/100.0 << std::endl;
+}
 
-//get highest grade
+void get_highest(std::vector<StudentStruct> &students_vect)
+{
+    int top_grade {0};
+    std::string top_student {};
+    for(StudentStruct student : students_vect)
+    {
+        if(student.grade > top_grade)
+        {
+            top_student = student.name;
+        }
+    }
+    std::cout << "The student with the highest grade is: "  << top_student << std::endl;
+}
 
 
 int main()
 {
     std::vector<StudentStruct> students_vect;
 
-    get_students_from_user(students_vect);
+    set_students(students_vect);
 
     std::cout << "Oma testitulostus:" << std::endl;
     for(auto student : students_vect)
@@ -49,6 +65,9 @@ int main()
         std::cout << student.name << " "<< student.age << " " << student.grade << std::endl;
 
     }
+
+    print_average(students_vect);
+    get_highest(students_vect);
 
     return 0;
 }
