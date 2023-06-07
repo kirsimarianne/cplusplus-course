@@ -25,7 +25,7 @@ int main()
     int y = my_number.get_number();
     std::cout << y << std::endl;
     my_number.set_number(5);
-    std::cout << my_number.get_number(); 
+    std::cout << my_number.get_number() << std::endl;S
 
     
     return 0;

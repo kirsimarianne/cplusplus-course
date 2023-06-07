@@ -1,7 +1,7 @@
 #include <iostream>
 
 // local scope
-void declare_var()
+void print_number()
 {
     int x {5};
     std::cout << x << std::endl;
@@ -10,6 +10,6 @@ void declare_var()
 
 int main(){
 
-    declare_var(); 
+    print_number(); 
     return 0;
 }

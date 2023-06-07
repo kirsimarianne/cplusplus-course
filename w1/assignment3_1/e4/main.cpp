@@ -9,7 +9,7 @@ int main(){
     }
 
     // x not visible here
-    //std::cout << x << std::endl;
+    std::cout << x << std::endl;
     
     return 0;
 }
