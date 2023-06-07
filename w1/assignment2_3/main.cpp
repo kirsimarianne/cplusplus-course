@@ -58,14 +58,6 @@ int main()
     std::vector<StudentStruct> students_vect;
 
     set_students(students_vect);
-
-    std::cout << "Oma testitulostus:" << std::endl;
-    for(auto student : students_vect)
-    {
-        std::cout << student.name << " "<< student.age << " " << student.grade << std::endl;
-
-    }
-
     print_average(students_vect);
     get_highest(students_vect);
 
