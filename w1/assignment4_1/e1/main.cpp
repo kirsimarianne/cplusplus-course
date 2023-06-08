@@ -4,6 +4,7 @@
 
 std::string capitalize_string(std::string s)
 {
+    
     for(int i = 0; i < s.length(); i++)
     {
         if(i == 0)
