@@ -1,6 +1,6 @@
 #include <iostream>
 
-struct TIME
+struct Time
 {
     int seconds{};
     int minutes{};
@@ -10,9 +10,9 @@ struct TIME
 /* Function does not handle situation where day changes
  * between start and stop time
  */
-TIME get_difference(TIME t1, TIME t2)
+Time get_difference(Time t1, Time t2)
 {
-    TIME difference;
+    Time difference;
 
     if(t1.seconds > t2.seconds)
     {
@@ -33,9 +33,9 @@ TIME get_difference(TIME t1, TIME t2)
     return difference;
 }
 
-TIME get_time_from_user()
+Time get_time_from_user()
 {
-    TIME t;
+    Time t;
     std::cout << "Hours: ";
     std::cin >> t.hours;
     std::cout << "Minutes: ";
@@ -46,14 +46,14 @@ TIME get_time_from_user()
     return t;
 }
 
-void print_difference(TIME t)
+void print_difference(Time t)
 {
     std::cout << "Time difference: " << t.hours << ":"<< t.minutes << ":" << t.seconds << std::endl;
 }
 
 int main()
 {
-    struct TIME t1, t2;
+    struct Time t1, t2;
     std::cout << "Enter start time" << std::endl;
     t1 = get_time_from_user();
 
