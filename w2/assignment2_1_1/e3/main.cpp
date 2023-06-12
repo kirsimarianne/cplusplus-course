@@ -11,8 +11,7 @@
 
 int main()
 {
-    std::array<int,10> arr{5, 2, 9, 1, 10, 8, 6, 3, 4, 7};
-    
+    std::array<int,10> arr{1, 2, 1, 2}; 
     std::cout << std::accumulate(arr.begin(), arr.end(), 0) << '\n';
 
     return 0;
