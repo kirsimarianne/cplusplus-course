@@ -6,16 +6,16 @@
 #include <iostream>
 #include <array>
 
-void print_array(const std::array<int, 10>& arr)
+void print(const std::array<int, 10>& arr)
 {
-    for(const auto& a : arr)
+    for(const auto& element : arr)
      {
-        std::cout << a << ' ';
+        std::cout << element << ' ';
      }
 }
 
 int main()
 {
     std::array<int, 10> arr{5, 2, 9, 1, 10, 8, 6, 3, 4, 7};
-    print_array(arr);
+    print(arr);
 }

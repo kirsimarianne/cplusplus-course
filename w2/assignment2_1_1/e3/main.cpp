@@ -5,14 +5,18 @@
 
 #include <iostream>
 #include <array>
-#include <vector>
 #include <numeric>
+
+int get_sum(const std::array<int, 10> arr)
+{
+    return std::accumulate(arr.begin(), arr.end(), 0);
+}
    
 
 int main()
 {
     std::array<int,10> arr{1, 2, 1, 2}; 
-    std::cout << std::accumulate(arr.begin(), arr.end(), 0) << '\n';
+    std::cout << "Sum is: " << get_sum(arr) << '\n';
 
     return 0;
 }

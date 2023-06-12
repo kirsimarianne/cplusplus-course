@@ -4,20 +4,21 @@
 
 #include <iostream>
 #include <array>
-#include <vector>
 #include <numeric>
    
+int get_product(const std::array<int, 4>& arr)   
+{
+    int product {1};
+    for(const auto& element : arr){
+        product *= element;
+    }
+    return product;
+}
 
 int main()
 {
-    std::array<int,10> arr{5, 2, 9, 1, 10, 8, 6, 3, 4, 7};
-
-    int product {1};
-    for(const auto& a : arr){
-        product *= a;
-    }
-    
-    std::cout << product << '\n';
+    std::array<int,4> arr{1, 2, 3, 1};
+    std::cout << "Product is: " << get_product(arr) << '\n';
 
     return 0;
 }

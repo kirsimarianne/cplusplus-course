@@ -10,23 +10,12 @@
 
 bool find_number(const std::array<int, 10>& arr, const int& n)
 {
-    /*for(const auto& a : arr)
-    {
-        if(a == n)
-        {
-            return true;
-        }
-    }
-    return false;*/
-
-
     auto it = std::find(arr.begin(), arr.end(), n);
     if(it != arr.end())
     {
         return true;
     }
     return false;
-
 }    
 
 int main()
