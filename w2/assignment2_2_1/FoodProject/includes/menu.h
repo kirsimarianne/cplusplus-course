@@ -3,6 +3,7 @@
 
 #include "food.h"
 
+#include <iostream>
 #include <string>
 #include <vector>
 
