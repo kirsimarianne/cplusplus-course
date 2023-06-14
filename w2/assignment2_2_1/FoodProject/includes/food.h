@@ -7,6 +7,7 @@
 using Ingredients = std::vector<std::string>;
 
 struct Food{
+    int id {};
     std::string name {};
     double price {};
     Ingredients ingredients {};
@@ -14,6 +15,7 @@ struct Food{
 
 void print_food(const Food& food);
 
-Food add_food(std::string name, double price, std::vector<std::string> ingredients);
+Food add_food(int id, std::string name, double price, Ingredients ingredients);
+
 
 #endif

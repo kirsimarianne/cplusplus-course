@@ -1,18 +1,21 @@
 #include "food.h"
 #include <string>
 
+/* Function gets food struct as a reference, name, 
+ * price and vector of ingredients as parameters.
+ * Function adds food name, price and ingredients vector to food structure.
+*/
 
-Food add_food(std::string name, double price, std::vector<std::string> ingredients)
+Food add_food(int id, std::string name, double price, Ingredients ingredients)
 {
-    Food food {};
+    Food food;
+    food.id = id;
     food.name = name;
     food.price = price;
-    food.ingredients = {"base", "sauce", "cheese"};
 
     for(auto elem : ingredients)
     {
         food.ingredients.push_back(elem);
     }
-
     return food;
 }
