@@ -3,13 +3,12 @@
  * and prints the contents of the file to the console. 
  * Make sure to handle errors, like if the file doesn't exist. Use CMake to build your program.
 */
+#ifndef PRINTLINES_H
+#define PRINTLINES_H
+
 #include <fstream>
 #include <iostream>
 
-#ifndef OPENFILE_H
-#define OPENFILE_H
-
-bool print_file_content(std::string filename);
-
+void print_file_content(std::ifstream& input_file);
 
 #endif
