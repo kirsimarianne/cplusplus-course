@@ -5,9 +5,25 @@
 
 #include <filesystem>
 #include <vector>
+#include <algorithm>
+
+//const std::string line = enum {-l, --lines};
+
+void read_cmds(int argc, char** argv)
+{
+  
+    auto it = std::find(argv+1, argv+argc, "-l");
+    if(it != argv+argc)
+    {
+        std::cout << "-l found!";
+    }
+   
+}
 
 int main(int argc, char** argv)
 {
+    read_cmds(argc, argv);
+
     // Check amount of arguments
     if(argc < 2)
     {
