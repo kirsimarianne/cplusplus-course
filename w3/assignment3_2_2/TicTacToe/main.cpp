@@ -4,7 +4,7 @@
 #include <limits>
 #include <string>
 #include <vector>
-
+#include <algorithm>
 using GameBoard = std::vector<std::vector<char>>;
 
 #define SIZE 3
@@ -24,6 +24,8 @@ struct Player
     bool turn {};
     bool human {};
 };*/
+
+int minimax(GameBoard game_board, bool player);
 
 void fill_board(GameBoard &game_board)
 {
@@ -106,7 +108,6 @@ std::pair<int, int> get_position(const GameBoard &game_board)
 void update_board(GameBoard &game_board, const std::pair<int, int> &position,
                   const bool &player_1)
 {
-    std::cout << "Testi: " << position.first << position.second << '\n';
     if (player_1)
     {
         game_board[position.first][position.second] = PLAYER_1;
@@ -154,7 +155,7 @@ bool is_board_full(const std::vector<std::vector<char>> &game_board)
     {
         for (int j = 0; j < SIZE; j++)
         {
-            if (game_board[i][j] == ' ')
+            if (game_board[i][j] == EMPTY)
                 return false;
         }
     }
@@ -165,7 +166,7 @@ bool is_board_full(const std::vector<std::vector<char>> &game_board)
  */
 std::vector<std::pair<int, int>> possible_moves(const std::vector<std::vector<char>> &game_board)
 {
-    std::vector<std::pair<int, int>> moves {};
+    std::vector<std::pair<int, int>> moves{};
     for (int i = 0; i < SIZE; i++)
     {
         for (int j = 0; j < SIZE; j++)
@@ -180,41 +181,83 @@ std::vector<std::pair<int, int>> possible_moves(const std::vector<std::vector<ch
 }
 
 
-std::pair<int, int> find_best_move(const GameBoard& board, std::vector<std::pair<int,int>> legal_moves) {
-    std::pair<int,int> best_move {};
-    int best_eval = INT_MIN;
+std::pair<int, int> find_best_move(GameBoard game_board, std::vector<std::pair<int, int>> legal_moves)
+{
+    std::pair<int, int> best_move{};
+    int best_eval = INT_MAX;
+    for (auto &move : legal_moves)
+    {
+        //update_board(game_board, move, false);
 
-        for(auto& move : legal_moves)
+        int eval = minimax(game_board, false);
+        
+        if (eval < best_eval)
         {
-            GameBoard temp_board = board;
-            update_board(temp_board, move, false);
-
-            int eval = minimax(temp_board, 0, false);
-            if (eval > best_eval) {
-                best_eval = eval;
-                best_move = i;
-            }    
+            best_eval = eval;
+            best_move = move;
         }
+        //game_board[move.first][move.second] = EMPTY;
+    }
     return best_move;
 }
 
-
-int minimax(const std::vector<std::vector<char>> &game_board)
+int minimax(GameBoard game_board, bool player_1)
 {
+    if (check_win(game_board, PLAYER_2))
+    {
+        std::cout << "Testi -1\n";
+        return -1;
+
+    }
     if (check_win(game_board, PLAYER_1))
     {
+        std::cout << "Testi 1\n";
         return 1;
     }
-    else if(check_win(game_board, PLAYER_2))
+    if (is_board_full(game_board))
     {
-        return -1;
+        std::cout << "Testi 0\n";
+        return 0;
     }
-    else if (is_board_full(game_board))
+    std::vector<std::pair<int, int>> moves{possible_moves(game_board)};
+    if (player_1)
     {
-        return 0; // DRAW
+        int value = INT_MIN;
+        for (int i = 0; i < SIZE; ++i)
+        {
+            for (int j = 0; j < SIZE; ++j)
+            {
+                if (game_board[i][j] != EMPTY)
+                    continue;
+                //GameBoard temp_board { game_board };
+                //char old_value = game_board[i][j];
+                update_board(game_board, {i, j}, true);
+                value = std::max(value, minimax(game_board, false));
+                game_board[i][j] = EMPTY;
+            }
+        }
+        return value;
+    }
+    else
+    {
+        int value = INT_MAX;
+        for (int i = 0; i < SIZE; ++i)
+        {
+            for (int j = 0; j < SIZE; ++j)
+            {
+                if (game_board[i][j] != EMPTY)
+                    continue;
+                    //GameBoard* temp_board = new GameBoard;
+                    //temp_board = &game_board;
+                 //GameBoard temp_board = game_board;
+                update_board(game_board, {i, j}, false);
+                value = std::min(value, minimax(game_board, true));
+                game_board[i][j] = EMPTY;
+            }
+        }
+        return value;
     }
 
-    // if(current_player == 'X')
     // value = INT_MIN
     //  sitten loopataan kaikki mahdolliset siirrot
     //  value = std::max(value, Minimax(Result(game_board, a))); // a:lla tarkoiteen mahdollista laillista siirtoa
@@ -255,14 +298,14 @@ void game_loop(bool ai_minimax)
     std::pair<int, int> position{};
     bool player_1 = true;
 
-    system("clear");
+    //system("clear");
 
     fill_board(game_board);
     print_board(game_board);
 
     while (true)
     {
-        if(ai_minimax && !player_1)
+        if (ai_minimax && !player_1)
         {
             position = find_best_move(game_board, possible_moves(game_board));
         }
@@ -271,16 +314,22 @@ void game_loop(bool ai_minimax)
             position = get_position(game_board);
         }
         update_board(game_board, position, player_1);
-        system("clear");
+        //system("clear");
         print_board(game_board);
         if (check_win(game_board, player_1))
         {
-            std::cout << "You win!\n\n";
+            if(player_1 == true)
+            {
+                std::cout << "Player 1 win!\n\n";
+            }
+            else{
+                std::cout << "Player 2 win!\n\n";
+            }
             break;
         }
         if (is_board_full(game_board))
         {
-            std::cout << "It's a draw.\n\n";    
+            std::cout << "It's a draw.\n\n";
             break;
         }
         change_turn(player_1);
@@ -289,18 +338,22 @@ void game_loop(bool ai_minimax)
 
 int main()
 {
-    bool ai_minimax {true};
-    system("clear");
+    bool ai_minimax{true};
+    //system("clear");
     while (true)
     {
         std::cout << "1) Multiplayer \n2) Play against professonal tic tac toe \n3) quit\n";
         int cmd{get_input()};
 
-        if(cmd == 1)
+        if (cmd == 1)
         {
             ai_minimax = false;
         }
-        else if(cmd == 3)
+        else if (cmd == 2)
+        {
+            ai_minimax = true;
+        }
+        else if (cmd == 3)
         {
             return 0;
         }
@@ -309,5 +362,7 @@ int main()
             continue;
         }
         game_loop(ai_minimax);
-    }    
+    }
+
+    return 0;
 }
