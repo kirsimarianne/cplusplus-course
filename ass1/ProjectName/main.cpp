@@ -4,7 +4,6 @@
 
 int main()
 {
-
-    std::cout << generate(1,100) << '\n';
+    std::cout << sum(1,2) << '\n';
     return 0;
 }
