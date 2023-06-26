@@ -1,12 +1,12 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
 #include "pascal.h"
+#include "doctest.h"
 
 
 TEST_CASE("Pascal vector tests")
 {
     int value = 5;
-    std::vector<std::vector<int>> result {create_pascal(value)};
+    std::vector<std::vector<int>> result = create_pascal(value);
 
     CHECK(result.size() == 5);
     CHECK(result[4].size() == 9);
