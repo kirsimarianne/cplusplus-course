@@ -1,31 +1,83 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
-#include "user.h"
+#include "bank.h"
 
-TEST_CASE("add_user")
+const int ERROR_CODE = -1;
+
+UsersMap users_map{};
+AccountsMap accounts_map{};
+Name test_name{"Pekka Pennonen"};
+Address test_address{"Puistokatu 20 B 35, 33100, Tampere"};
+PhoneNmbr test_phone{"0402536385"};
+UserID test_user_id {};
+UserID false_user_id {-1};
+AccountID test_account_id {};
+AccountID false_account_id {-1};
+
+TEST_CASE("Test add_user and side-effects of add_account functions")
 {
-    std::unordered_map<int, UserStruct> users_map{};
-    std::unordered_map<int, AccountStruct> accounts_map{};
-    std::string test_name{"Pekka Pennonen"};
-    std::string test_address{"Puistokatu 20 B 35, 33100, Tampere"};
-    std::string test_phone{"0402536385"};
     SUBCASE("Add user succesfully")
     {
-        int test_id = add_user(accounts_map, users_map, test_name, test_address, test_phone);
-        CHECK(users_map.at(test_id).name == test_name);
+        test_user_id = add_user(accounts_map, users_map, test_name, test_address, test_phone);
+        CHECK(test_user_id != ERROR_CODE);
+        CHECK(users_map.at(test_user_id).name == test_name);
+        CHECK(users_map.at(test_user_id).address == test_address);
+        CHECK(users_map.at(test_user_id).phone_nmbr == test_phone);
+        CHECK(users_map.at(test_user_id).accounts_vect.size() == 1);
+    }
+    SUBCASE("First bank account created succesfully after add_user call")
+    {
+        // find created bank account from test_user struct inside accounts_vect
+        test_account_id = users_map.at(test_user_id).accounts_vect.at(0);
+        // Check the same account is inside accounts_map
+        AccountsMap::iterator it = accounts_map.find(test_account_id);
+        CHECK(it != accounts_map.end());
     }
 }
 
-TEST_CASE("add_user")
+TEST_CASE("user_account_exists")
 {
-    std::unordered_map<int, UserStruct> users_map{};
-    std::unordered_map<int, AccountStruct> accounts_map{};
-    std::string test_name{"Pekka Pennonen"};
-    std::string test_address{"Puistokatu 20 B 35, 33100, Tampere"};
-    std::string test_phone{"0402536385"};
-    SUBCASE("Add user succesfully")
+    SUBCASE("Call function with existing id")
     {
-        int test_id = add_user(accounts_map, users_map, test_name, test_address, test_phone);
-        CHECK(users_map.at(test_id).name == test_name);
+        CHECK(user_account_exists(users_map, test_user_id) == true);
+    }
+    SUBCASE("Call function with non-existing id")
+    {
+        CHECK(user_account_exists(users_map, false_user_id) == false);
     }
 }
+
+
+TEST_CASE("bank_account_exists")
+{
+    SUBCASE("Call function with existing user_id and account_id")
+    {
+        CHECK(bank_account_exists(users_map, accounts_map, test_user_id, test_account_id) == true);
+    }
+    SUBCASE("Call function false values")
+    {
+        CHECK(bank_account_exists(users_map, accounts_map, false_account_id, test_account_id) == false);
+        CHECK(bank_account_exists(users_map, accounts_map, test_account_id, false_account_id) == false);
+        CHECK(bank_account_exists(users_map, accounts_map, false_account_id, false_account_id) == false);
+    }
+}
+
+TEST_CASE("Function add_account")
+{
+    SUBCASE("Try add account for non-existing user")
+    {
+        AccountID tmp_account_id = add_new_account(accounts_map, users_map, false_user_id);
+        CHECK(tmp_account_id == ERROR_CODE);
+    }
+    SUBCASE("Add new account succesfully")
+    {
+        AccountID tmp_account_id = add_new_account(accounts_map, users_map, test_user_id);
+        CHECK(tmp_account_id != ERROR_CODE);
+        // Check account can be found from accounts_vect in second place.
+        CHECK(tmp_account_id == users_map.at(test_user_id).accounts_vect.at(1));
+        // Check account can be found from accounts_map
+        AccountsMap::iterator it = accounts_map.find(test_account_id);
+        CHECK(it != accounts_map.end());
+    }
+}
+
