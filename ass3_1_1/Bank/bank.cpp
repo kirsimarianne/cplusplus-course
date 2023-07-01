@@ -123,3 +123,16 @@ bool add_money(const UsersMap& users_map, AccountsMap& accounts_map, const UserI
     }
     return false;
 }
+
+Balance get_balance(const AccountsMap& accounts_map, const AccountID& account_id)
+{
+    AccountsMap::const_iterator it = accounts_map.find(account_id);
+
+    if(it == accounts_map.end())
+    {
+        return -1;
+    }
+
+    return accounts_map.at(account_id).balance;
+
+}

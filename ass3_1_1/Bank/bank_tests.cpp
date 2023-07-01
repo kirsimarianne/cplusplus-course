@@ -9,10 +9,11 @@ AccountsMap accounts_map{};
 Name test_name{"Pekka Pennonen"};
 Address test_address{"Puistokatu 20 B 35, 33100, Tampere"};
 PhoneNmbr test_phone{"0402536385"};
-UserID test_user_id {};
-UserID false_user_id {-1};
-AccountID test_account_id {};
-AccountID false_account_id {-1};
+Balance test_balance{};
+UserID test_user_id{};
+UserID false_user_id{-1};
+AccountID test_account_id{};
+AccountID false_account_id{-1};
 
 TEST_CASE("Test add_user and side-effects of add_account functions")
 {
@@ -47,7 +48,6 @@ TEST_CASE("user_account_exists")
     }
 }
 
-
 TEST_CASE("bank_account_exists")
 {
     SUBCASE("Call function with existing user_id and account_id")
@@ -81,3 +81,25 @@ TEST_CASE("Function add_account")
     }
 }
 
+double test_amount{123.55};
+char false_type_amount{'a'};
+double test_amount{123.55555555};
+
+TEST_CASE("Function add_money and bank_account_exists: side-effects")
+{
+
+    // users_map.at(test_user_id).vects
+    SUBCASE("Add money succesfully")
+    {
+        Balance tmp_balance = accounts_map.at(test_account_id).balance;
+        add_money(users_map, accounts_map, test_user_id, test_account_id, test_amount);
+        Balance new_balance = accounts_map.at(test_account).balance;
+        CHECK(tmp_balance = new_balance)
+
+        CHECK(accounts_map.at(test_account).balance ==)
+    }
+    SUBCASE("Add money with false account_id")
+    {
+        CHECK(add_money())
+    }
+}
