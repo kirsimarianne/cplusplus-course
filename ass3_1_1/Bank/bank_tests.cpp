@@ -15,11 +15,11 @@ UserID false_user_id{-1};
 AccountID test_account_id{};
 AccountID false_account_id{-1};
 
-TEST_CASE("Test add_user and side-effects of add_account functions")
+TEST_CASE("Function add_user and side-effects of add_account")
 {
     SUBCASE("Add user succesfully")
     {
-        test_user_id = add_user(accounts_map, users_map, test_name, test_address, test_phone);
+        test_user_id = add_user(users_map, accounts_map, test_name, test_address, test_phone);
         CHECK(test_user_id != ERROR_CODE);
         CHECK(users_map.at(test_user_id).name == test_name);
         CHECK(users_map.at(test_user_id).address == test_address);
@@ -36,7 +36,7 @@ TEST_CASE("Test add_user and side-effects of add_account functions")
     }
 }
 
-TEST_CASE("user_account_exists")
+TEST_CASE("Function user_account_exists")
 {
     SUBCASE("Call function with existing id")
     {
@@ -48,17 +48,17 @@ TEST_CASE("user_account_exists")
     }
 }
 
-TEST_CASE("bank_account_exists")
+TEST_CASE("Function bank_account_exists")
 {
     SUBCASE("Call function with existing user_id and account_id")
     {
-        CHECK(bank_account_exists(users_map, accounts_map, test_user_id, test_account_id) == true);
+        CHECK(bank_account_exists(users_map, test_user_id, test_account_id) == true);
     }
     SUBCASE("Call function false values")
     {
-        CHECK(bank_account_exists(users_map, accounts_map, false_account_id, test_account_id) == false);
-        CHECK(bank_account_exists(users_map, accounts_map, test_account_id, false_account_id) == false);
-        CHECK(bank_account_exists(users_map, accounts_map, false_account_id, false_account_id) == false);
+        CHECK(bank_account_exists(users_map, false_user_id, test_account_id) == false);
+        CHECK(bank_account_exists(users_map, test_user_id, false_account_id) == false);
+        CHECK(bank_account_exists(users_map, false_user_id, false_account_id) == false);
     }
 }
 
@@ -66,12 +66,12 @@ TEST_CASE("Function add_account")
 {
     SUBCASE("Try add account for non-existing user")
     {
-        AccountID tmp_account_id = add_new_account(accounts_map, users_map, false_user_id);
+        AccountID tmp_account_id = add_new_account(users_map, accounts_map, false_user_id);
         CHECK(tmp_account_id == ERROR_CODE);
     }
     SUBCASE("Add new account succesfully")
     {
-        AccountID tmp_account_id = add_new_account(accounts_map, users_map, test_user_id);
+        AccountID tmp_account_id = add_new_account(users_map, accounts_map, test_user_id);
         CHECK(tmp_account_id != ERROR_CODE);
         // Check account can be found from accounts_vect in second place.
         CHECK(tmp_account_id == users_map.at(test_user_id).accounts_vect.at(1));
@@ -81,25 +81,43 @@ TEST_CASE("Function add_account")
     }
 }
 
-double test_amount{123.55};
-char false_type_amount{'a'};
-double test_amount{123.55555555};
-
 TEST_CASE("Function add_money and bank_account_exists: side-effects")
 {
-
+    double test_amount{123.55};
     // users_map.at(test_user_id).vects
     SUBCASE("Add money succesfully")
     {
-        Balance tmp_balance = accounts_map.at(test_account_id).balance;
-        add_money(users_map, accounts_map, test_user_id, test_account_id, test_amount);
-        Balance new_balance = accounts_map.at(test_account).balance;
-        CHECK(tmp_balance = new_balance)
-
-        CHECK(accounts_map.at(test_account).balance ==)
+        Balance before_balance = accounts_map.at(test_account_id).balance;
+        bool add_money_succesfully{add_money(users_map, accounts_map, test_user_id, test_account_id, test_amount)};
+        Balance after_balance = accounts_map.at(test_account_id).balance;
+        CHECK(add_money_succesfully == true);
+        CHECK(after_balance == before_balance + test_amount);
     }
-    SUBCASE("Add money with false account_id")
+    SUBCASE("Add money with false id values")
     {
-        CHECK(add_money())
+        CHECK(add_money(users_map, accounts_map, false_user_id, test_account_id, test_amount) == false);
+        CHECK(add_money(users_map, accounts_map, test_user_id, false_account_id, test_amount) == false);
+        CHECK(add_money(users_map, accounts_map, false_user_id, false_account_id, test_amount) == false);
+    }
+}
+
+TEST_CASE("Function add_money and bank_account_exists: side-effects")
+{
+    double test_amount{100.00};
+    double false_amount{200.00};
+    // users_map.at(test_user_id).vects
+    SUBCASE("Withdraw money succesfully")
+    {
+        Balance before_balance = accounts_map.at(test_account_id).balance;
+        bool withdraw_money_succesfully{add_money(users_map, accounts_map, test_user_id, test_account_id, test_amount)};
+        Balance after_balance = accounts_map.at(test_account_id).balance;
+        CHECK(withdraw_money_succesfully == true);
+        CHECK(after_balance == before_balance - test_amount);
+    }
+    SUBCASE("Withdraw money with false id values")
+    {
+        CHECK(withdraw_money(users_map, accounts_map, false_user_id, test_account_id, test_amount) == false);
+        CHECK(withdraw_money(users_map, accounts_map, test_user_id, false_account_id, test_amount) == false);
+        CHECK(withdraw_money(users_map, accounts_map, false_user_id, false_account_id, test_amount) == false);
     }
 }

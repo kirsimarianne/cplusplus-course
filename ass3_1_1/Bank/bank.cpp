@@ -35,16 +35,23 @@ bool user_account_exists(const UsersMap &users_map, const UserID &user_id)
  * 1) Iterates vector of user's bank accounts
  * 2) Returns true if matching account_id is found
  * 3) returns false if matching account_id is not found
-*/
-bool bank_account_exists(const UsersMap& users_map, const AccountsMap& accounts_map, 
-                            const UserID& user_id, const AccountID& account_id)
-{   
-    for(auto& id_in_vect : users_map.at(user_id).accounts_vect){
-        if(id_in_vect == account_id)
+ * 4) returns false if matching user_id is not found
+ */
+bool bank_account_exists(const UsersMap &users_map, const UserID &user_id, const AccountID &account_id)
+{
+    UsersMap::const_iterator it = users_map.find(user_id);
+    if (it != users_map.end())
+    {
+        for (auto &id_in_vect : users_map.at(user_id).accounts_vect)
         {
-            return true;
+            if (id_in_vect == account_id)
+            {
+                return true;
+            }
         }
+        return false;
     }
+
     return false;
 }
 
@@ -54,7 +61,7 @@ bool bank_account_exists(const UsersMap& users_map, const AccountsMap& accounts_
  * 3) calls add_new_account function with user_id created in this function.
  * Error handling: if create_user_id returns id which is already in use, returns -1.
  */
-UserID add_user(AccountsMap &accounts_map, UsersMap &users_map,
+UserID add_user(UsersMap& users_map, AccountsMap &accounts_map,
                 const Name &name, const Address &address, const PhoneNmbr &phone_nmbr)
 {
     UserID user_id = create_user_id();
@@ -71,7 +78,7 @@ UserID add_user(AccountsMap &accounts_map, UsersMap &users_map,
     user.phone_nmbr = phone_nmbr;
 
     users_map.insert(std::pair<int, UserStruct>(user_id, user));
-    add_new_account(accounts_map, users_map, user_id);
+    add_new_account(users_map, accounts_map, user_id);
 
     return user_id;
 }
@@ -82,7 +89,7 @@ UserID add_user(AccountsMap &accounts_map, UsersMap &users_map,
  * 3) stores new account to accounts_map
  * Error handling: if user_id is not found, returns -1.
  */
-AccountID add_new_account(AccountsMap &accounts_map, UsersMap &users_map, const UserID &user_id)
+AccountID add_new_account(UsersMap& users_map, AccountsMap &accounts_map, const UserID &user_id)
 {
     // If user does not exists return -1.
     UsersMap::iterator it_user = users_map.find(user_id);
@@ -110,13 +117,13 @@ AccountID add_new_account(AccountsMap &accounts_map, UsersMap &users_map, const 
 }
 
 /* Function takes parameters: users_map, accounts_map, user_id, account_id and amount
- * 1) Adds amount to the balance  and returns true, 
+ * 1) Adds amount to the balance  and returns true,
  *    if given bank account exists in given user's data
  * 2) Returns false if given bank account is not found from user's data.
-*/
-bool add_money(const UsersMap& users_map, AccountsMap& accounts_map, const UserID& user_id, const AccountID& account_id, const double& amount)
-{   
-    if(bank_account_exists(users_map, accounts_map, user_id, account_id))
+ */
+bool add_money(const UsersMap &users_map, AccountsMap &accounts_map, const UserID &user_id, const AccountID &account_id, const double &amount)
+{
+    if (bank_account_exists(users_map, user_id, account_id))
     {
         accounts_map.at(account_id).balance += amount;
         return true;
@@ -124,15 +131,34 @@ bool add_money(const UsersMap& users_map, AccountsMap& accounts_map, const UserI
     return false;
 }
 
-Balance get_balance(const AccountsMap& accounts_map, const AccountID& account_id)
+/* Function takes parameters: user_id, account_id and amount
+ * 1) Decreases amount of the balance and returns true,
+ *    if given bank account exists in given user's data
+ * 2) Returns false if given bank account is not found from user's data.
+ */
+bool withdraw_money(const UsersMap &users_map, AccountsMap &accounts_map, UserID &user_id, const AccountID &account_id, const double &amount)
+{
+    // check if bank account is correst
+    if (bank_account_exists(users_map, user_id, account_id))
+    {
+        if (accounts_map.at(account_id).balance >= amount)
+        {
+            accounts_map.at(account_id).balance -= amount;
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
+Balance get_balance(const AccountsMap &accounts_map, const AccountID &account_id)
 {
     AccountsMap::const_iterator it = accounts_map.find(account_id);
 
-    if(it == accounts_map.end())
+    if (it == accounts_map.end())
     {
         return -1;
     }
 
     return accounts_map.at(account_id).balance;
-
 }
