@@ -1,4 +1,8 @@
-#include "bank.h"
+#include "../includes/bank.h"
+
+#include <unordered_map>
+#include <string>
+#include <vector>
 
 /* Function returns unique user number
  */

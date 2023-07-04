@@ -1,6 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
-#include "bank.h"
+#include "../external/doctest.h"
+#include "../includes/bank.h"
 
 const int ERROR_CODE = -1;
 

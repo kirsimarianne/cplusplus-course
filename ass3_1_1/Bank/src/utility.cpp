@@ -1,4 +1,8 @@
-#include "utility.h"
+#include "../includes/utility.h"
+
+#include <cctype>
+#include <cmath>
+#include <iostream>
 
 /* Function gets string as a parameter,
  * converts string to int and returns integer.
