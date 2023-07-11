@@ -7,7 +7,6 @@
 #include <vector>
 #include <algorithm>
 
-//const std::string line = enum {-l, --lines};
 
 void read_cmds(int argc, char** argv)
 {
@@ -31,11 +30,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    // Create an input file stream
-    //std::ifstream input_file(argv[1]);
-
-    // Check file can be opened
-
+    // if file is only argument
     if(argc == 2)
     {
         std::ifstream input_file(argv[1]);
@@ -47,10 +42,11 @@ int main(int argc, char** argv)
         print_file_content(input_file);
 
     }
-    else
+    //loop arguments, quit program if false argument
+    else 
     {
         
-        for(size_t i = 2; i < 5; i++)
+        for(size_t i = 2; i < argc; i++)
         {   
             std::ifstream input_file(argv[1]);
             if(!input_file.is_open())
@@ -58,26 +54,31 @@ int main(int argc, char** argv)
                 std::cout << "Failed to open the file.\n";
                 return 1;
             }
-            if(std::string(argv[i]).compare("-l")==0 || std::string(argv[i]).compare("--lines")==0)
+            else if(std::string(argv[i]).compare("-l")==0|| std::string(argv[i]).compare("--lines")==0)
             {
                 count_lines(input_file);
             }
-            if(std::string(argv[i]).compare("-w")==0 || std::string(argv[i]).compare("--words")==0)
+            else if(std::string(argv[i]).compare("-w")==0 || std::string(argv[i]).compare("--words")==0)
             {
                 count_strings(input_file);
             }
-            if(std::string(argv[i]).compare("-c")==0 || std::string(argv[i]).compare("--chars")==0)
+            else if(std::string(argv[i]).compare("-c")==0 || std::string(argv[i]).compare("--chars")==0)
             {
                 count_chars(input_file);
+            }
+            else{
+                std::cout << "False argument: " << argv[i] << '\n';
+                return 1;
             }
         }
     }
 
+    // Find path
     std::filesystem::path directory_path{std::filesystem::current_path()};
     std::cout << "Path: " << directory_path;
     
     std::vector<std::string> textFiles;
-
+    // Find files and store them in vector
     for(const auto& entry : std::filesystem::directory_iterator(directory_path))
     {
         if(entry.is_regular_file() && entry.path().extension()== ".txt")
@@ -86,9 +87,10 @@ int main(int argc, char** argv)
         }
     }
 
+    // print size of the file
     for(auto elem : textFiles)
     {
-        std::cout << elem << ": " << std::filesystem::file_size(elem) << '\n';
+        std::cout << elem << " size : " << std::filesystem::file_size(elem) << '\n';
     }
 
     return 0;
