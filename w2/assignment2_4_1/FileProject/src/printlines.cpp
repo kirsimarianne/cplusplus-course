@@ -1,4 +1,4 @@
-#include "printlines.h"
+#include "../includes/printlines.h"
 
 /* Function opens file and prints it's content
  *

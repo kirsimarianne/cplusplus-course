@@ -1,4 +1,4 @@
-#include "countlines.h"
+#include "../includes/countlines.h"
 
 /* Function opens file 
  *

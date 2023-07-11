@@ -1,4 +1,4 @@
-#include "countstrings.h"
+#include "../includes/countstrings.h"
 
 void count_strings(std::ifstream& input_file)
 {

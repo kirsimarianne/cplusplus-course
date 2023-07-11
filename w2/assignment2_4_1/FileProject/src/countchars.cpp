@@ -1,4 +1,4 @@
-#include "countchars.h"
+#include "../includes/countchars.h"
 
 void count_chars(std::ifstream& input_file)
 { 
