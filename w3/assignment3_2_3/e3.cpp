@@ -11,7 +11,7 @@ int power(int x, int n)
     {
         return x;
     }
-    return power(x*x,n-1);
+    return x*power(x,n-1);
 }
 
 int main()
