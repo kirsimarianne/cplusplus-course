@@ -1,9 +1,9 @@
 #include "../includes/modbus.h"
 
-/* Function takes amount as a parameter and 
+/* Function takes amount as a parameter and
  * creates sample data to regicter_vect as much as given amount,
  * Function returns created register_vect.
-*/
+ */
 std::vector<Register> create_register(int amount)
 {
     std::vector<Register> register_vect{};
@@ -24,11 +24,11 @@ std::vector<Register> create_register(int amount)
 /* Function creates one master and 10 slave devices.
  * Calls create_register function.
  * Stores devices to vector and returns vector.
-*/
-std::vector<Device> create_devices()
+ */
+std::unordered_map<DeviceID, DeviceStruct> create_devices()
 {
-    std::vector<Device> device_vect{};
-    Device device{};
+    DeviceMap device_map{};
+    DeviceStruct device{};
     static int id{0};
     for (int i = 0; i < 11; i++)
     {
@@ -40,10 +40,9 @@ std::vector<Device> create_devices()
         {
             device.master = 0;
         }
-        device.id = id;
         device.register_vector = create_register(5);
-        device_vect.push_back(device);
+        device_map.insert(std::pair<DeviceID,DeviceStruct>(id, device));
         id++;
     }
-    return device_vect;
+    return device_map;
 }

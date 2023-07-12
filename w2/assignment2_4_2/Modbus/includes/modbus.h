@@ -1,3 +1,4 @@
+#include <unordered_map>
 #include <vector>
 
 struct Register
@@ -6,14 +7,15 @@ struct Register
     int value {};
 };
 
-struct Device
+struct DeviceStruct
 {
-    int id {};
     bool master {0};
     std::vector<Register> register_vector {};
 };
 
+using DeviceID = int;
+using DeviceMap = std::unordered_map<DeviceID, DeviceStruct>;
 
 std::vector<Register> create_register(int amount);
-std::vector<Device> create_devices();
+DeviceMap create_devices();
 
