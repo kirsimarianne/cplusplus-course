@@ -1,6 +1,8 @@
 #include "order.h"
 #include <iostream>
 
+/* Function prints the current status of the order
+*/
 void Order::current_status()
 {
     switch (status)
@@ -30,6 +32,8 @@ void Order::current_status()
     }
 }
 
+/* Function changes the status to next state
+*/
 void Order::change_status()
 {
     if (status == Status::ordered)
