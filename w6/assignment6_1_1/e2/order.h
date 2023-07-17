@@ -13,9 +13,8 @@ enum class Status
 class Order
 {
 public:
-    void current_status();
-    void change_status();
-
+    Status current_status();
+    void advance_status();
 private:
     Status status = Status::ordered;
 };
