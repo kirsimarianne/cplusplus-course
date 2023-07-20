@@ -1,34 +1,29 @@
 #ifndef CFILE_H
 #define CFILE_H
 
-#include <cstudio>
 #include <cstdlib>
+#include <cstdio>
+#include <string>
 
+class CFile
+{
 
-class CFile{
+    // constructor or static member function. opens a text file
+    //  Uses RAII -> cleans up itself: eli huolehdi, että file suljetaan
+    //  Function to read in the next line of the text file
+    //  Optional: function to print the file size
 
-
-    //constructor or static member function. opens a text file
-
-
-    // Uses RAII -> cleans up itself: eli huolehdi, että file suljetaan 
-
-    // Function to read in the next line of the text file
-
-    // Optional: function to print the file size
-
-    public:
-
+public:
     CFile();
-    CFile(const char *filename);
+    ~CFile();
+    CFile(const std::string &filename);
 
+    std::string read_line();
 
-
-    private:
+private:
     // pointer to file
-    FILE* file;
-
-
+    FILE *file_handle;
+    std::string line;
 };
 
 #endif
