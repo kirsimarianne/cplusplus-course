@@ -2,12 +2,63 @@
 #include <vector>
 #include <exception>
 
+// Handle pointer
+template <typename T>
+struct strip_pointer
+{
+    using type = T;
+};
+
+template <typename T>
+struct strip_pointer<T *>
+{
+    using type = T;
+};
+
+// Handle reference
+template <typename T>
+struct strip_reference
+{
+    using type = T;
+};
+
+template <typename T>
+struct strip_reference<T &>
+{
+    using type = T;
+};
+
+// Handle const refrence
+template <typename T>
+struct strip_const_reference
+{
+    using type = T;
+};
+
+template <typename T>
+struct strip_const_reference<const T &>
+{
+    using type = T;
+};
+
 template <typename T>
 class Grid
 {
+    // value type T
+    // reference T&
+    // const reference const T&
+    // iteratir for value type T
+    // constant iterator for value type T
+    // difference type: signed inetegr
+    // size_type : unsigened integer
+
+    // T& operator[](int i);
+    // const T& operator[](int i) const;
+
     using value_type = T;
-    using reference = T&;
-    using const_reference = const T&;
+    using T_without_pointer = typename strip_pointer<T>::type;
+    using T_without_reference = typename strip_reference<T>::type;
+    using T_without_const_reference = typename strip_const_reference<T>::type;
     using storage_type = std::vector<T>;
     using iterator = typename storage_type::iterator;
     using const_iterator = typename storage_type::const_iterator;
@@ -18,30 +69,21 @@ public:
     Grid(int rows, int columns);
     Grid(int rows, int columns, T value);
 
+    void print();
+
     T &at(int row, int column)
     {
-        return vect[row * columns_ + column];
+        
+        return vect_[row * columns_ + column];
     }
 
-    // value type T
-
-    // reference T&
-
-    // const reference const T&
-
-    // iteratir for value type T
-
-    // constant iterator for value type T
-
-    // difference type: signed inetegr
-
-    // size_type : unsigened integer
-
-     //T& operator[](int i);
-    // const T& operator[](int i) const;
+    void change(int row, int column, int value)
+    {
+        vect_[row * columns_ + column] = value;
+    }
 
 private:
-    std::vector<T> vect;
+    std::vector<T> vect_;
     int rows_;
     int columns_;
     // int length = rows*columns;
@@ -58,7 +100,7 @@ Grid<T>::Grid(int rows, int columns)
     rows_ = rows;
     columns_ = columns;
     std::cout << "Length: " << rows * columns << "\n";
-    vect.reserve(rows * columns);
+    vect_.reserve(rows * columns);
 }
 
 // Constructor with size parameters and value parameter
@@ -67,13 +109,21 @@ Grid<T>::Grid(int rows, int columns, T value)
 {
     for (int i = 0; i < (rows * columns); i++)
     {
-        vect.push_back(value);
+        vect_.push_back(value);
     }
 }
 
+template <typename T>
+void Grid<T>::print()
+{
+    for (int i = 0; i < (rows_*columns_); i++)
+    {
+        std::cout << vect_[i] << ", ";
+    }
+    std::cout << "\n";
+}
+
 // Implement begin() and end()
-
-
 
 int main()
 {
@@ -88,17 +138,41 @@ int main()
         std::cout << "\n";
     }
     std::cout << "\n";
-    Grid<int> grid2(3, 3, 5);
+    grid.change(0, 0, 9);
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
+        {
+            std::cout << grid.at(i, j) << " ";
+        }
+        std::cout << "\n";
+    }
+
+
+    Grid<int> grid2(3, 4, 5);
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            std::cout << grid2.at(i, j) << " ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+    grid2.change(1, 2, 9);
+    std::cout << "Print 1D vector:\n ";
+    grid2.print();
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 4; j++)
         {
             std::cout << grid2.at(i, j) << " ";
         }
         std::cout << "\n";
     }
 
-    Grid<int> *grid3 = &grid2;
+    /*Grid<int> *grid3 = &grid2;
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
@@ -106,5 +180,5 @@ int main()
             std::cout << grid3.at(i, j) << " ";
         }
         std::cout << "\n";
-    }
+    }*/
 }
