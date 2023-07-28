@@ -76,16 +76,37 @@ TEST_CASE("Test set function")
         CHECK(character_grid.at(0, 0) == 'x');
         CHECK(character_grid.at(0, 1) == 'x');
         CHECK(character_grid.at(0, 2) == 'x');
-        CHECK(character_grid.at(0, 3) == 'x');
+        CHECK(character_grid.at(0, 3) == 'a');
 
         CHECK(character_grid.at(1, 0) == 'x');
-        CHECK(character_grid.at(1, 1) == 'x');
+        CHECK(character_grid.at(1, 1) == 'b');
         CHECK(character_grid.at(1, 2) == 'x');
         CHECK(character_grid.at(1, 3) == 'x');
 
-        CHECK(character_grid.at(2, 0) == 'x');
+        CHECK(character_grid.at(2, 0) == 'c');
         CHECK(character_grid.at(2, 1) == 'x');
         CHECK(character_grid.at(2, 2) == 'x');
         CHECK(character_grid.at(2, 3) == 'x');
     }
+}
+
+TEST_CASE("Get size and resize")
+{
+    Grid<int> integer_grid(2, 2);
+    SUBCASE("First size")
+    {
+        CHECK(integer_grid.get_size() == 4);
+    }
+    SUBCASE("Make size bigger")
+    {
+        integer_grid.resize(5, 5);
+        CHECK(integer_grid.get_size() == 25);
+    }
+    SUBCASE("Make size smaller")
+    {
+        integer_grid.resize(5, 1);
+        CHECK(integer_grid.get_size() == 5);
+    }
+
+    
 }
