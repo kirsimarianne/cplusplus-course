@@ -4,17 +4,37 @@
  */
 
 #include <algorithm>
+#include <iostream>
+#include <vector>
+#include <list>
 
-template <typename T, typename U, typename... Ts>
-void combine_containers(T &&first, U &&second, Ts &&...rest)
+template <typename T, typename U>
+T combine_containers(const T &first, const U &second)
 {
-    T dst{};
-    std::merge(first.begin(), first.end(), second.begin(), second.end(), std::back_inserter(dst));
-    if constexpr (sizeof...(Ts) > 0)
+    T result {};
+    result.insert(result.end(), first.begin(), first.end());
+    result.insert(result.end(), second.begin(), second.end());
+    return result;
+}
+
+template <typename T, typename... Ts>
+T combine_containers(const T &first, const Ts &...rest)
+{
+    T result = combine_containers(first, combine_containers(rest...));
+    return result;
+}
+
+int main()
+{
+    std::vector<int> vect1 = {2, 5, 20, 7, 14};
+    std::list<int> list1 = {25, 77, 56};
+    std::vector<int> vect2 = {0, 1, 2, 3, 4};
+
+    std::vector<int> vect_result = combine_containers(vect1, list1, vect2);
+
+    for (const auto &elem : vect_result)
     {
-        combine_containers(dst);
+        std::cout << elem << " ";
     }
-    else
-    {
-    }
+    std::cout << "\n";
 }
