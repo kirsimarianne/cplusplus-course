@@ -1,92 +1,109 @@
+#include <cmath>
 #include <functional>
 #include <iostream>
 #include <stdexcept>
 #include <unordered_map>
 #include <vector>
 
-using Values = std::vector<double>;
-using Calculator = std::unordered_map<char, std::function<double(Values)>>;
+using Value = double;
+using Calculator = std::unordered_map<char, std::function<Value(Value, Value)>>;
 
-double add(Values values)
+double add(Value left, Value right)
 {
-    double sum{};
-    for (const auto &elem : values)
-    {
-        sum = sum + elem;
-    }
-    return sum;
+    return round((left + right)*100)/100;
 }
 
-double subtract(Values values)
+double subtract(Value left, Value right)
 {
-    double sub{};
-    for (const auto &elem : values)
-    {
-        sub = sub - elem;
-    }
-    return sub;
+    return round((left - right)*100)/100;
 }
 
-double multiply(Values values)
+double multiply(Value left, Value right)
 {
-    double product{};
-    for (const auto &elem : values)
-    {
-        product = product * elem;
-    }
-    return product;
+    return round((left * right)*100)/100;
 }
 
-double divide(Values values)
+double divide(Value left, Value right)
 {
-    double div{values[0]};
-    for (int i = 1; i < values.size(); ++i)
+    if (right == 0)
     {
-        if (values[i] == 0)
-        {
-            throw std::runtime_error("Undefined");
-        }
-        div = div / values[i];
+        throw std::runtime_error("Undefined");
     }
-    return div;
+
+    return round((left / right)*100)/100;
 }
+
+double exponent(Value left, Value right)
+{
+    return round((pow(left, right))*100)/100;
+}
+
 
 int main(int argc, char **argv)
 {
-
+    /* Check at least 3 arguments are given.
+     */
     if (argc < 4)
     {
-        std::cout << "Please give as command line arguments: operator and at least two values seperated by space.\n";
+        std::cout << "Please give command line arguments: at least two values and operator between them seprated by space.\n";
         return 1;
     }
 
-    Values values{};
-    char *operation = argv[1];
-    for (int i = 2; i < argc; i=i+2)
-    {
-        try
-        {
-            values.push_back(std::stod(argv[i]));
-        }
-        catch(std::exception &e)
-        {
-            std::cout << "Invalid value." << "\n";
-            return 1;
-        }
-    }
-
+    /* Calculator map, operations as a key, functions as a value.
+     */
     Calculator calculator = {
         {'+', add},
         {'-', subtract},
         {'*', multiply},
-        {'/', divide}};
+        {'/', divide},
+        {'^', exponent}};
 
-    auto it = calculator.find(*operation);
-
-    if (it == calculator.end())
+    /* Inits left value with first argument.
+     * Throws exception if variable not double.
+     */
+    double left_value{};
+    try
     {
-        std::cout << "Operation not found.\n";
+        left_value = std::stod(argv[1]);
+    }
+    catch (std::exception &e)
+    {
+        std::cout << "Invalid value."
+                  << "\n";
+        return 1;
     }
 
-    std::cout << "Result: " << it->second(values) << "\n";
+    /* Loops arguments vector.
+     * Handles opration and right value in every loop.
+     * Adds result to left value.
+     * Throws exception if value is not double.
+     * Prints error message if operation is not found.
+     */
+    double right_value{};
+    char *operation{};
+    for (int i = 2; i < argc; i = i + 2)
+    {
+        try
+        {
+            right_value = std::stod(argv[i + 1]);
+        }
+        catch (std::exception &e)
+        {
+            std::cout << "Invalid value. * needs \\ infront of it"
+                      << "\n";
+            return 1;
+        }
+
+        // Find operation from map.
+        auto it = calculator.find(*argv[i]);
+
+        if (it == calculator.end())
+        {
+            std::cout << "Operation not found.\n";
+        }
+        // Add result to left value for next loop.
+        left_value = it->second(left_value, right_value);
+    }
+
+    std::cout << "Result: " << left_value << "\n";
 }
