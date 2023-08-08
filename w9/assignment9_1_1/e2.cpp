@@ -3,27 +3,26 @@
 #include <iostream>
 #include <stdexcept>
 #include <unordered_map>
-#include <vector>
 
 using Value = double;
 using Calculator = std::unordered_map<char, std::function<Value(Value, Value)>>;
 
-double add(Value left, Value right)
+Value add(Value left, Value right)
 {
     return round((left + right)*100)/100;
 }
 
-double subtract(Value left, Value right)
+Value subtract(Value left, Value right)
 {
     return round((left - right)*100)/100;
 }
 
-double multiply(Value left, Value right)
+Value multiply(Value left, Value right)
 {
     return round((left * right)*100)/100;
 }
 
-double divide(Value left, Value right)
+Value divide(Value left, Value right)
 {
     if (right == 0)
     {
@@ -33,7 +32,7 @@ double divide(Value left, Value right)
     return round((left / right)*100)/100;
 }
 
-double exponent(Value left, Value right)
+Value exponent(Value left, Value right)
 {
     return round((pow(left, right))*100)/100;
 }
@@ -61,7 +60,7 @@ int main(int argc, char **argv)
     /* Inits left value with first argument.
      * Throws exception if variable not double.
      */
-    double left_value{};
+    Value left_value{};
     try
     {
         left_value = std::stod(argv[1]);
@@ -79,7 +78,7 @@ int main(int argc, char **argv)
      * Throws exception if value is not double.
      * Prints error message if operation is not found.
      */
-    double right_value{};
+    Value right_value{};
     char *operation{};
     for (int i = 2; i < argc; i = i + 2)
     {
