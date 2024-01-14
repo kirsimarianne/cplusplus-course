@@ -1,0 +1,7 @@
+#include "utils.h"
+#include <random>
+
+int sum(int x, int y)
+{
+    return x+y;
+}
